@@ -23,7 +23,7 @@
                             <addClasspath>true</addClasspath>
                             <!-- Specifies that all dependencies of our application are found -->
                             <!-- Configures the main class of the application -->
-                            <mainClass>org.example.Hello</mainClass>
+                            <mainClass>org.example.AnimalTest</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
