@@ -13,14 +13,23 @@ public class OperationService {
     );
 
     public Operation chooseOperation(char operation) throws OperationException {
-        Optional<Operation> first = operations.stream()
+//        Operation current = null;
+//        for (Operation op : operations) {
+//            boolean currentOperation = op.isCurrentOperation(operation);
+//            if (currentOperation) {
+//                current = op;
+//                break;
+//            }
+//        }
+//        if (current == null) {
+//            throw new OperationException("Your operation is not supported! See you later!!!");
+//        }
+//        return current;
+
+
+        return operations.stream()
                 .filter(op -> op.isCurrentOperation(operation))
-                .findFirst();
-
-        if (first.isEmpty()) {
-            throw new OperationException("Your operation is not supported! See you later!!!");
-        }
-
-        return first.get();
+                .findFirst()
+                .orElseThrow(()-> new OperationException("Your operation is not supported! See you later!!!"));
     }
 }
