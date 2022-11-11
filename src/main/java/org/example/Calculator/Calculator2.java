@@ -1,50 +1,97 @@
 package org.example.Calculator;
 
+import org.example.Calculator.operation.Operation;
+import org.example.Calculator.operation.OperationService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.Scanner;
 
 public class Calculator2 {
+    private final static Logger logger = LoggerFactory.getLogger(Calculator2.class);
 
-    Scanner scanner = new Scanner(System.in);
+    private final OperationService operationService;
 
-    int num1;
-    int num2;
-    char operation;
+    public Calculator2(OperationService operationService) {
+        this.operationService = operationService;
+    }
 
-    public void scan() {
+    private final Scanner scanner = new Scanner(System.in);
 
+    public void launch() {
+        boolean finish = false;
 
+        while (!finish) {
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+
+            CalculationData data = scan();
+            try {
+                calculation(data);
+                finish = true;
+            } catch (Throwable e) {
+                error(data, e);
+            }
+        }
+    }
+
+    private CalculationData scan() {
         System.out.print("Введите первое число: ");
-        num1 = scanner.nextInt();
+        int num1 = scanner.nextInt();
 
         System.out.print("Выберите операцию: (+, -, *, /) ");
-        operation = scanner.next().charAt(0);
+        char operation = scanner.next().charAt(0);
 
         System.out.print("Введите второе число: ");
-        num2 = scanner.nextInt();
+        int num2 = scanner.nextInt();
 
+        return new CalculationData(num1, num2, operation);
     }
 
 
-    public void calculation() {
+    private void calculation(CalculationData data) throws Throwable {
+        Operation operation = operationService.chooseOperation(data.getOperation());
+        int result = operation.operate(data.getNum1(), data.getNum2());
+        System.out.println(
+                "Result of operation: " +
+                        data.getNum1() +
+                        data.getOperation() +
+                        data.getNum2() + "=" + result
+        );
+    }
 
-        if (operation == '+') {
-            System.out.println(num1 + " + " + num2 + " = " + (num1 + num2));
-        } else if (operation == '-') {
-            System.out.println(num1 + " - " + num2 + " = " + (num1 - num2));
-        } else if (operation == '*') {
-            System.out.println(num1 + " x " + num2 + " = " + (num1 * num2));
-        } else if (operation == '/') {
-            System.out.println(num1 + " / " + num2 + " = " + (num1 / num2));
+    private void error(CalculationData data, Throwable e) {
+        if (data.getOperation() == '/' && data.getNum2() == 0) {
+            logger.error("Дурак? Тебе кто раздрешил делить на ноль?!", e);
         } else {
-            System.err.println("Использйте только данные операции: +, -, *, /");
+            logger.error("Some exception: ", e);
         }
     }
 
-    public void error() {
-        if (operation == '/' && num2 == 0) {
-            System.err.println("Дурак? Тебе кто раздрешил делить на ноль?!");
+    private static class CalculationData {
+        private final int num1;
+        private final int num2;
+        private final char operation;
+
+        public CalculationData(int num1, int num2, char operation) {
+            this.num1 = num1;
+            this.num2 = num2;
+            this.operation = operation;
         }
 
-    }
+        public int getNum1() {
+            return num1;
+        }
 
+        public int getNum2() {
+            return num2;
+        }
+
+        public char getOperation() {
+            return operation;
+        }
+    }
 }
