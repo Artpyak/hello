@@ -1,13 +1,11 @@
 package org.example.desinfector;
 
+@Singleton
 public class CoronaDesinfector {
     @InjectByTy
     private Announcer announcer;
     @InjectByTy
     private Policeman policeman;
-
-    public CoronaDesinfector() {
-    }
 
     public void start(Room room) {
         announcer.announce("Начинаеться дезинфекция, все вон!");
