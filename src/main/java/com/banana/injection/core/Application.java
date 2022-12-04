@@ -1,15 +1,15 @@
 package com.banana.injection.core;
 
-import com.banana.injection.factory.ObjectFactory;
+import com.banana.injection.factory.BeanFactory;
 import com.banana.injection.service.CarService;
 
 public class Application {
     public static void run() {
         System.out.println("Hello Banana");
-        ObjectFactory objectFactory = new ObjectFactory();
-        objectFactory.init();
+        BeanFactory beanFactory = new BeanFactory();
+        beanFactory.init();
 
-        CarService bean = objectFactory.getBean(CarService.class);
+        CarService bean = beanFactory.getBean(CarService.class);
         bean.work();
     }
 }
